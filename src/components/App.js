@@ -15,7 +15,10 @@ let AppComponent = React.createClass({
   render() {
     return (
       <div className="index">
-        {this.props.children || <LoginForm />}
+        {
+          this.props.children ||
+          <LoginForm />
+        }
       </div>
     );
   }

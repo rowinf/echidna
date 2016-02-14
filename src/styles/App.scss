@@ -1,4 +1,10 @@
 /* Base Application Styles */
+
+html {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
 body {
   background: #fafafa;
 }
@@ -9,4 +15,11 @@ input:-webkit-autofill {
 
 .index {
   padding: 15px;
+}
+
+.flex-content {
+  display: flex;
+  flex-flow: row wrap-reverse;
+  justify-content: flex-start;
+  align-content: space-around;
 }

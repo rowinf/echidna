@@ -27,9 +27,10 @@ const TodosPageComponent = React.createClass({
   render() {
     return (
       <Card style={todosStyle}>
-        <CardTitle title={<TodoProgress todos={this.state.todos} />} />
+        <CardTitle title="Todos" titleStyle={{textAlign: 'center'}}/>
         <CardText>
           <TodoList todos={this.state.todos} />
+          <p style={{textAlign: 'center'}}><TodoProgress todos={this.state.todos} /></p>
         </CardText>
       </Card>
     );
