@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "echidna",
+    "style": "scss",
+    "postcss": true
+  }
+}
