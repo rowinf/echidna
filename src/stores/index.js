@@ -1,32 +1,17 @@
 
-import { createStore } from 'redux';
+import { syncHistory } from 'react-router-redux';
+import { browserHistory } from 'react-router';
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from 'redux';
 import appReducer from '../reducers';
 
-const TODOS = [
-  {
-    id: 0,
-    text: 'A sample todo',
-    isCompleted: false
-  },
-  {
-    id: 1,
-    text: 'Another sample',
-    isCompleted: false
-  },
-  {
-    id: 2,
-    text: 'Tis one is completed',
-    isCompleted: false
-  }
-];
+const reduxRouterMiddleware = syncHistory(browserHistory);
 
-const initialState = {
-  auth: false,
-  todos: TODOS
-};
+const finalCreateStore = compose(
+  applyMiddleware(thunkMiddleware, reduxRouterMiddleware),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+)(createStore);
 
-//  redux dev tools chrome extension middleware
-let store = createStore(appReducer, initialState,
-  window.devToolsExtension ? window.devToolsExtension() : undefined);
+let store = finalCreateStore(appReducer);
 
 export default store;

@@ -5,8 +5,10 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import LinkedStateMixin from 'react-addons-linked-state-mixin';
 import {Card, CardTitle, CardText, CardActions} from 'material-ui/lib/card';
 import {Colors} from 'material-ui/lib/styles';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import store from 'stores';
-import loginAttempt from 'actions/loginAttempt';
+import loginFetch from 'actions/loginFetch';
+
 
 const loginStyles = {
   margin: '10px auto',
@@ -23,13 +25,22 @@ const LoginFormComponent = React.createClass({
   },
   mixins: [LinkedStateMixin],
   getInitialState() {
-    return {email: '', password: '', isSumbitted: false, invalidEmailText: ''};
+    return {email: '', password: '', isSumbitted: false, invalidEmailText: '', auth: {}};
+  },
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(this.updateAuth);
+  },
+  componentWillUnmount() {
+    this.unsubscribe();
+  },
+  updateAuth() {
+    this.setState({auth: store.getState().auth});
   },
   handleSubmit(event) {
     event.preventDefault();
     this.setState({isSumbitted: true});
     if (this.isEmailValid()) {
-      store.dispatch(loginAttempt(this.state.email, this.state.password));
+      store.dispatch(loginFetch(this.state.email, this.state.password));
     }
     this.setErrorText();
   },
@@ -53,10 +64,14 @@ const LoginFormComponent = React.createClass({
             <CardText>
               <TextField type="email" hintText="email" ref="email"
                 valueLink={this.linkState('email')}
-                errorText={this.state.invalidEmailText} />
+                errorText={this.state.invalidEmailText || (this.state.auth.status == 'failed' && ' ')} />
               <br/>
               <TextField type="password" hintText="password" ref="password"
-                valueLink={this.linkState('password')} />
+                valueLink={this.linkState('password')}
+                errorText={this.state.auth.status == 'failed' && 'Invalid email or password'} />
+              <div style={{height: 50}}>
+                {this.state.auth.isFetching && <CircularProgress size={.5} />}
+              </div>
             </CardText>
             <CardText>
               <p><em>A todo app for this century</em></p>
@@ -68,7 +83,7 @@ const LoginFormComponent = React.createClass({
             </CardText>
           </div>
           <CardActions>
-            <RaisedButton type="submit" label="Login" primary />
+            <RaisedButton type="submit" label="Login" labelPosition="before" primary />
           </CardActions>
         </form>
       </Card>

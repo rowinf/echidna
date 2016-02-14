@@ -22,7 +22,8 @@ const TodosPageComponent = React.createClass({
     this.unsubscribe();
   },
   updateTodos() {
-    this.setState({todos: store.getState().todos});
+    let todos = store.getState().todos;
+    this.setState({todos: todos});
   },
   render() {
     return (
