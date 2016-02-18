@@ -1,8 +1,6 @@
 
 import {COMPLETE_TODO} from 'actions/completeTodo';
 
-import completeTodo from './completeTodo';
-
 const TODOS = [
   {
     id: 0,
@@ -21,13 +19,22 @@ const TODOS = [
   }
 ];
 
+const completeSingleTodo = (todos, action)=> {
+  let index = todos.findIndex(t => t.id == action.id);
+  return [
+    ...todos.slice(0, index),
+    Object.assign({}, todos[index], {isCompleted: true}),
+    ...todos.slice(index + 1)
+  ];
+};
+
 const todos = (todos, action)=> {
   if (todos === undefined) {
     return TODOS;
   }
   switch (action.type) {
     case COMPLETE_TODO:
-      return todos.map(t => completeTodo(t, action));
+      return completeSingleTodo(todos, action);
     default:
       return todos;
   }
